@@ -89,17 +89,17 @@ def on_message(client, userdata, msg):
 def on_check(temp, pollution, radiation):
     
     
-    if temp > 282:
+    if int(temp) > 282:
         print("Warning: Exceeding Temperature Threshold")
         #send "w" character to rpi
         client.publish("172.20.10.4/warn","temp warning")
         
-    elif pollution > 205:
+    elif int(pollution) > 205:
         print("Warning: Exceeding Carbon Oxide Threshold")
         # send "a" character to rpi
         client.publish("172.20.10.4/warn", "pollution warning")
         #send "LED_ON"
-    elif radiation > 880:
+    elif int(radiation) > 880:
         print("Warning: Exceeding Radiation Threshold")
         # send "s" character to rpi
         client.publish("172.20.10.4/warn", "rad warning") 
