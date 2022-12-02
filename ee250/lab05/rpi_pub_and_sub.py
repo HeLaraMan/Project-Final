@@ -27,17 +27,17 @@ def warn_callback(client,userdata,msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
     grovepi.digitalWrite(buzzer, 1)
     if(data == "temp warning"):
-      lcd.setText_norefresh("Warning: Exceeding Temperature Threshold    ")
+      lcd.setText_norefresh("Warning: Over Temperature Threshold    ")
       lcd.setRGB(255, 87, 51)
       
       
     elif(data == "pollution warning"):
-      lcd.setText_norefresh("Warning: Exceeding Air Pollution Threshold     ")
+      lcd.setText_norefresh("Warning: Over Air Pollution Threshold     ")
       lcd.setRGB(255, 255, 0)
         
 
     elif(data == "rad warning"):
-      lcd.setText_norefresh("Warning: Exceeding Radiation Threshold      ")
+      lcd.setText_norefresh("Warning: Over Radiation Threshold      ")
       lcd.setRGB(255, 0, 0)
 
 

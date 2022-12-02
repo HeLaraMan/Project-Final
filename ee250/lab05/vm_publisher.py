@@ -118,11 +118,12 @@ if __name__ == '__main__':
         latitude = random.randint(-90,90)
         longitude = random.randint(-180,180) 
         print("Carbon Monoxide Level:")
-        pollution_init(latitude,longitude)
+        p = pollution_init(latitude,longitude)
        	#print("Solar Radiation Level:")
        # radiation_init(latitude,longitude)
-        print("Heat Level:")
-        temperature_init(latitude,longitude)
-        time.sleep(15)
+       	print("Heat Level:")
+        t = temperature_init(latitude,longitude)
+        on_check(t,p,0)
+        time.sleep(5)
             
 
