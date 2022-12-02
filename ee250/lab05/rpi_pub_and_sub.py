@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 import grovepi
-from grove_rgb_lcd import *
+import grove_rgb_lcd as lcd
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
@@ -27,17 +27,17 @@ def warn_callback(client,userdata,msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
     grovepi.digitalWrite(buzzer, 1)
     if(data == "temp warning"):
-      setText_norefresh("Warning: Exceeding Temperature Threshold    ")
+      lcd.setText_norefresh("Warning: Exceeding Temperature Threshold    ")
       lcd.setRGB(255, 87, 51)
       
       
     elif(data == "pollution warning"):
-      setText_norefresh("Warning: Exceeding Air Pollution Threshold     ")
+      lcd.setText_norefresh("Warning: Exceeding Air Pollution Threshold     ")
       lcd.setRGB(255, 255, 0)
         
 
     elif(data == "rad warning"):
-      setText_norefresh("Warning: Exceeding Radiation Threshold      ")
+      lcd.setText_norefresh("Warning: Exceeding Radiation Threshold      ")
       lcd.setRGB(255, 0, 0)
 
 
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         # publish message when button is pressed
         if(grovepi.digitalRead(button)== 1):
             client.publish("172.20.10.4/button", "Button pressed!")
-            setText_norefresh("                                    ")
+            lcd.setText_norefresh("                                    ")
             lcd.setRGB(0, 255, 0)
             grovepi.digitalWrite(buzzer, 0)
             time.sleep(1)
