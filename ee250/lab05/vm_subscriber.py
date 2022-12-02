@@ -1,14 +1,19 @@
-"""EE 250L Lab 04 Starter Code
-
-Run vm_subscriber.py in a separate terminal on your VM."""
-
 import paho.mqtt.client as mqtt
 import time
+
+# callback for button    
+def on_button(client, userdata, message):
+    print("on_button: " + message.topic + " " + "\"" + 
+        str(message.payload, "utf-8") + "\"")
+    print("Button pressed. Warning acknowledged.")
 
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
-    #subscribe to the ultrasonic ranger topic here
+    #subscribe to the ultrasonic ranger topic here     
+    client.subscribe("172.20.10.4/button")
+    client.message_callback_add("172.20.10.4/button",on_button)    
+    
 
 #Default message callback. Please use custom callbacks.
 def on_message(client, userdata, msg):
@@ -23,7 +28,4 @@ if __name__ == '__main__':
     client.loop_start()
 
     while True:
-        print("delete this line")
         time.sleep(1)
-            
-
