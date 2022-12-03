@@ -3,6 +3,7 @@ import time
 import grovepi
 import grove_rgb_lcd as lcd
 
+
 def on_connect(client, userdata, flags, rc):
     print("Connected to server (i.e., broker) with result code "+str(rc))
 
@@ -27,19 +28,14 @@ def warn_callback(client,userdata,msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
     grovepi.digitalWrite(buzzer, 1)
     if(data == "temp warning"):
-      lcd.setText_norefresh("Warning: Over Temperature Threshold    ")
+      lcd.setText_norefresh("Warning: High  Temperature     ")
       lcd.setRGB(255, 87, 51)
       
       
     elif(data == "pollution warning"):
-      lcd.setText_norefresh("Warning: Over Air Pollution Threshold     ")
+      lcd.setText_norefresh("Warning: High   Carbon Oxide     ")
       lcd.setRGB(255, 255, 0)
         
-
-    elif(data == "rad warning"):
-      lcd.setText_norefresh("Warning: Over Radiation Threshold      ")
-      lcd.setRGB(255, 0, 0)
-
 
 if __name__ == '__main__':
     #this section is covered in publisher_and_subscriber_example.py
@@ -62,7 +58,7 @@ if __name__ == '__main__':
         # publish message when button is pressed
         if(grovepi.digitalRead(button)== 1):
             client.publish("172.20.10.4/button", "Button pressed!")
-            lcd.setText_norefresh("                                    ")
+            lcd.setText_norefresh("Status Clear                                    ")
             lcd.setRGB(0, 255, 0)
             grovepi.digitalWrite(buzzer, 0)
             time.sleep(1)

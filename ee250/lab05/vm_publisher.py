@@ -31,33 +31,13 @@ def pollution_init(latitude,longitude):
          print(response.text)
          return 0
 
-def radiation_init(latitude,longitude):
-    params = {
-        'appid' : '615584b858ab9897c727733fb66799d4',
-        'lat': latitude,
-        'lon': longitude,
-    }
-
-
-    response = requests.get('http://api.openweathermap.org/data/2.5/solar_radiation',params)
-    if response.status_code == 200:
-        data = response.json()
-        dumpedData = json.dumps(data)
-        loadedData = json.loads(dumpedData)
-        DNI = loadedData['list'][0]['radition']['dni_cs']
-        print(DNI)
-        return DNI
-
-    else:
-         print('error: got response code %d' % response.status_code)
-         print(response.text)
-         return 0
 
 def temperature_init(latitude,longitude):
     params = {
         'appid' : OWM_API_KEY,
         'lat': latitude,
         'lon': longitude,
+        'units': 'imperial'
     }
 
 
@@ -86,23 +66,19 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     print("on_message: " + msg.topic + " " + str(msg.payload, "utf-8"))
 
-def on_check(temp, pollution, radiation):
+def on_check(avg_temp, avg_pollution):
     
     
-    if int(temp) > 282:
-        print("Warning: Exceeding Temperature Threshold")
+    if int(avg_temp) > 280:
+        print("Warning: Exceeding Average Temperature Threshold")
         #send "w" character to rpi
         client.publish("172.20.10.4/warn","temp warning")
         
-    elif int(pollution) > 205:
-        print("Warning: Exceeding Carbon Oxide Threshold")
+    elif int(avg_pollution) > 180:
+        print("Warning: Exceeding Average Carbon Oxide Threshold")
         # send "a" character to rpi
         client.publish("172.20.10.4/warn", "pollution warning")
         #send "LED_ON"
-    elif int(radiation) > 880:
-        print("Warning: Exceeding Radiation Threshold")
-        # send "s" character to rpi
-        client.publish("172.20.10.4/warn", "rad warning") 
     
 
 if __name__ == '__main__':
@@ -115,15 +91,21 @@ if __name__ == '__main__':
     client.loop_start()
 
     while True:
-        latitude = random.randint(-90,90)
-        longitude = random.randint(-180,180) 
-        print("Carbon Monoxide Level:")
-        p = pollution_init(latitude,longitude)
-       	#print("Solar Radiation Level:")
-       # radiation_init(latitude,longitude)
-       	print("Heat Level:")
-        t = temperature_init(latitude,longitude)
-        on_check(t,p,0)
-        time.sleep(5)
-            
+    	latitude = random.randint(-90,90)
+    	longitude = random.randint(-180,180) 
+    	count = 0
+    	total_poll = 0
+    	total_temp = 0
+    	count += 1
+    	print("Carbon Monoxide Average Level:")
+    	total_poll += pollution_init(latitude,longitude)
+    	print("Average Heat Level:")
+    	total_temp += temperature_init(latitude,longitude)
+    	on_check((total_temp/count),(total_poll/count))
+    	time.sleep(5)
+    	if(count == 6):
+    		total_poll = 0
+	    	total_temp = 0
+	    	count = 0
+		    
 
